@@ -11,7 +11,7 @@ const mongoose = require('mongoose');
 var corsOptions = {
   origin: "http://localhost:3000"
 };
-mongoose.connect('mongodb+srv://wayne#####/Migrant-Friends?retryWrites=true&w=majority', {
+mongoose.connect('mongodb+srv://wayne86davenport:ikNnOEEmnWaVSNg5@cluster0.i33hhyp.mongodb.net/Migrant-Friends?retryWrites=true&w=majority', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 }).then(() => {
