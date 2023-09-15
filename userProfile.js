@@ -1,0 +1,17 @@
+const mongoose = require('mongoose');
+
+    
+const userProfileSchema = new mongoose.Schema({   
+    firstName: { type: String, required: false },
+    lastName: { type: String, required: false },
+    middleName: String, // Optional   
+    email: { type: String, required: true },   
+    language: { type: String, required: false },
+    locationCity: { type: String, required: false },
+    student: { type: Boolean, default: false },
+    bio: { type: String, max: 200 } // 200 character max
+});
+
+
+
+module.exports = mongoose.model('UserProfile', userProfileSchema);
