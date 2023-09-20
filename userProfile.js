@@ -9,7 +9,8 @@ const userProfileSchema = new mongoose.Schema({
     language: { type: String, required: false },
     locationCity: { type: String, required: false },
     student: { type: Boolean, default: false },
-    bio: { type: String, max: 200 } // 200 character max
+    bio: { type: String, max: 200 }, // 200 character max
+    uid: { type: String }
 });
 
 

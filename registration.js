@@ -11,25 +11,16 @@ const Registration = () => {
   const [language, setLanguage] = useState('');
   const [bio, setBio] = useState('');
   const [locationCity, setLocationCity] = useState('');
+  
 
 
   const handleRegistration = async (e) => {
-    e.preventDefault();
-    const userInfo = {
-      email,
-      password,
-      language,
-      firstName,
-      lastName,
-      bio,
-      locationCity
-    };
-
-    const userInfoJson = JSON.stringify(userInfo);
+    e.preventDefault();  
 
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
+      
       const response = await axios.post('http://localhost:7070/auth/register', {
         email: user.email,
         password: user.password,
@@ -37,9 +28,10 @@ const Registration = () => {
         lastName: lastName,
         language: language,
         bio: bio,
-        locationCity: locationCity
+        locationCity: locationCity,
+        uid: user.uid
                 
-      }, userInfoJson);
+      }/*, userInfoJson*/);
       if (response.status === 200) {
         alert('Profile created!');
         // Registration success, handle next steps (e.g., redirect to profile page)
