@@ -1,14 +1,12 @@
 # Migrant-Buddies
 Group Project
-Registration is a front end react component
+
 Getting Started
 Before using the API, make sure you have the following prerequisites installed:
 
 Node.js
 npm (Node Package Manager)
 MongoDB 
-
-API Endpoints
 
 
 These are the packages currently required for the project:
