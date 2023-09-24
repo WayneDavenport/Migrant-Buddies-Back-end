@@ -10,7 +10,10 @@ const userProfileSchema = new mongoose.Schema({
     locationCity: { type: String, required: false },
     student: { type: Boolean, default: false },
     bio: { type: String, max: 200 }, // 200 character max
-    uid: { type: String }
+    uid: { type: String },
+    requestsSent: [{ type: String }],
+    requestsReceived: [{ type: String }],
+    buddiesAccepted: [{ type: String }] 
 });
 
 

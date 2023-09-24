@@ -2,9 +2,13 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const UserProfile = require('./userProfile');
 const router = express.Router();
-//const { check, validationResult } = require('express-validator')
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
 
 router.use(express.json());
+router.use(bodyParser.json());
+
 //Define Middleware, Create Token
 
 function verifyToken(req, res, next) {
@@ -94,33 +98,118 @@ router.get('/users/:userId', verifyToken, async (req, res) => {
   }
 });
 
+//route to search
 router.post('/search-profiles', async (req, res) => {
   try {
-    // Extract submitted information from the request body
-    const { language, locationCity, } = req.body;
+    // Get the submitted values from the client
+    const { firstName, lastName, middleName, email, language, locationCity } = req.body;
 
-    // Construct a query object based on the submitted information
+    // Build a query object based on the submitted values
     const query = {};
+    if (firstName) query.firstName = firstName;
+    if (lastName) query.lastName = lastName;
+    if (middleName) query.middleName = middleName;
+    if (email) query.email = email;
+    if (language) query.language = language;
+    if (locationCity) query.locationCity = locationCity;
+    console.log('Query:', query);
 
-    if (language) {
-      query.language = language;
-    }
+    // Execute the query to find matching profiles
+    const profiles = await UserProfile.find(query);
+    console.log('Matching Profiles:', profiles);
 
-    if (locationCity) {
-      query.locationCity = locationCity;
-    }
-
-      // Use the query object to find matching profiles in the database
-    const profiles = await UserProfile.find(query).exec();
-
-    res.json(profiles);
+    // Send the filtered profiles to the front end
+    res.json({ profiles });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
-  
+// Route to send a friend request
+router.post('/send-buddy-request', async (req, res) => {
+  try {
+    const { senderUid, selectedUid } = req.body;
+
+    // Find the sender's profile
+    const senderProfile = await UserProfile.findOne({ uid: senderUid });
+
+    // Find the selected user's profile
+    const selectedProfile = await UserProfile.findOne({ uid: selectedUid });
+
+    if (!senderProfile || !selectedProfile) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Add sender's UID to the selected user's friendRequests array
+    selectedProfile.requestsReceived.push(senderUid);
+
+    // Add selected user's UID to the sender's sentRequests array
+    senderProfile.requestsSent.push(selectedUid);
+
+    // Save changes to both profiles
+    await selectedProfile.save();
+    await senderProfile.save();
+
+    res.status(200).json({ message: 'Friend request sent successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// Accept a friend request
+router.post('/accept-buddy-request', async (req, res) => {
+  try {
+    const { currentUserUid, selectedUid } = req.body;
+
+    // Find the current user's profile
+    const currentUserProfile = await UserProfile.findOne({ uid: currentUserUid });
+
+    // Find the selected user's profile
+    const selectedProfile = await UserProfile.findOne({ uid: selectedUid });
+
+    if (!currentUserProfile || !selectedProfile) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Remove the UID from the current user's friendRequests array
+    currentUserProfile.requestsReceived = currentUserProfile.requestsReceived.filter(
+      (uid) => uid !== selectedUid
+    );
+
+    // Add selected user's UID to the current user's friends array
+    currentUserProfile.buddiesAccepted.push(selectedUid);
+
+    // Save changes to both profiles
+    await currentUserProfile.save();
+    await selectedProfile.save();
+
+    res.status(200).json({ message: 'Friend request accepted successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// Route to get buddy requests received for the current user
+router.get('/requests-received/:currentUserUid', verifyToken, async (req, res) => {
+  try {
+    const currentUserUid = req.params.currentUserUid; // Get the UID from the route parameter
+
+    // Find the user's profile by UID and retrieve the requestsReceived array
+    const user = await UserProfile.findOne({ uid: currentUserUid });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    res.status(200).json({ requestsReceived: user.requestsReceived });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 
   module.exports = router;
