@@ -4,6 +4,7 @@ import { auth } from '../firebase';
 import axios from 'axios';
 
 const Registration = () => {
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');
@@ -11,16 +12,14 @@ const Registration = () => {
   const [language, setLanguage] = useState('');
   const [bio, setBio] = useState('');
   const [locationCity, setLocationCity] = useState('');
-  
-
 
   const handleRegistration = async (e) => {
-    e.preventDefault();  
+    e.preventDefault();
 
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-      
+
       const response = await axios.post('http://localhost:7070/auth/register', {
         email: user.email,
         password: user.password,
@@ -30,7 +29,7 @@ const Registration = () => {
         bio: bio,
         locationCity: locationCity,
         uid: user.uid
-                
+
       }/*, userInfoJson*/);
       if (response.status === 200) {
         alert('Profile created!');
@@ -61,6 +60,7 @@ const Registration = () => {
       <input type="text" value={locationCity} onChange={(e) => setLocationCity(e.target.value)} />
       <button type="submit">Register</button>
     </form>
-)};
+  )
+};
 
 export default Registration;

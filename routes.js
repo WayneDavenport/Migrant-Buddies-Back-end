@@ -21,7 +21,7 @@ function verifyToken(req, res, next) {
 
   try {
     // Verify the token using your JWT secret key
-    const verified = jwt.verify(token, 'your_jwt_secret_key');
+    const verified = jwt.verify(token, process.env.JWT_SECRET);
 
     // Attach the verified user data to the request object
     req.user = verified;
@@ -34,18 +34,17 @@ function verifyToken(req, res, next) {
   }
 };
 
-
 // Create a New User Route
 router.post('/register', async (req, res) => {
   const { email, firstName, lastName, bio, language, locationCity, uid } = req.body;
   const user = new UserProfile({
-      email,      
-      firstName,
-      lastName,
-      bio,
-      language,
-      locationCity,
-      uid 
+    email,
+    firstName,
+    lastName,
+    bio,
+    language,
+    locationCity,
+    uid
   });
   await user.save();
   console.log('User registered successfully');
@@ -212,4 +211,4 @@ router.get('/requests-received/:currentUserUid', verifyToken, async (req, res) =
 });
 
 
-  module.exports = router;
+module.exports = router;

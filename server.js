@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const router = require('./routes');
 
-
+require('dotenv').config() // For .env
 
 const app = express();
 
@@ -11,7 +11,8 @@ const mongoose = require('mongoose');
 var corsOptions = {
   origin: "http://localhost:3000"
 };
-mongoose.connect('mongodb+srv://wayne86davenport:ikNnOEEmnWaVSNg5@cluster0.i33hhyp.mongodb.net/Migrant-Friends?retryWrites=true&w=majority', {
+
+mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 }).then(() => {
