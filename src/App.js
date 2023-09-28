@@ -8,20 +8,17 @@ import ReceivedRequests from './components/ReceivedRequests';
 
 function App() {
   return (
-    <div className="App">         
+    <div className="App">
       <Registration></Registration>
       <div>
-      <Login></Login>
-      <h3>@test.com Test@1234</h3>
-      <Profile></Profile>    
+        <Login></Login>
+        <h3>@test.com Test@1234</h3>
+        <Profile></Profile>
       </div>
-    <ProfileSearch></ProfileSearch>
-    <ReceivedRequests />
-            
-
+      <ProfileSearch></ProfileSearch>
+      <ReceivedRequests />
     </div>
   );
 }
 
 export default App;
-  
