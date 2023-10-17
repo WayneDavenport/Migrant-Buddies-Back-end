@@ -9,12 +9,15 @@ const cookieParser = require('cookie-parser');
 
 const app = express();
 
-app.use(cors({
-    origin: 'http://localhost:8080',
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD'],
-    allowedHeaders: ['Authorization', 'Content-Type'],
-}));
+// app.use(cors({
+//     origin: 'http://localhost:8080',
+//     credentials: true,
+//     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD'],
+//     allowedHeaders: ['Authorization', 'Content-Type'],
+// }));
+
+// Allowing any origin, just during development phase of the project
+app.use(cors());
 
 app.use(cookieParser());
 
@@ -24,8 +27,10 @@ app.use(helmet());
 app.use(mongoSanitize());
 app.use(xss());
 
+// Routes
 app.use('/api/users', userRouter);
 
+// Errors handling
 app.use(globalErrorHandler);
 
 module.exports = app;

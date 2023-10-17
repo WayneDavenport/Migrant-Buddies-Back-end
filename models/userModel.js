@@ -36,14 +36,36 @@ const userSchema = new mongoose.Schema({
     passwordResetExpires: Date,
     role: {
         type: String,
-        enum: ['user', 'admin', 'manager'],
+        enum: ['user', 'admin'],
         default: 'user'
+    },
+    age: {
+        type: String
+    },
+    imageUrl: {
+        type: String,
+        default: 'https://imagevars.gulfnews.com/2023/07/12/Arnold-Schwarzenegger_18949561d21_large.jpg'
     },
     gender: String,
     language: String,
     locationCity: String,
-    student: { type: Boolean, default: false },
+    primaryEducation: {
+         type: String,
+         enum: ['yes', 'no', 'in progress'],
+    },
+    secondaryEducation: {
+        type: String,
+        enum: ['yes', 'no', 'in progress'],
+   },
+   vocationalEducation: {
+    type: String,
+    enum: ['yes', 'no', 'in progress'],
+   },
     bio: { type: String, max: 200 }, // 200 character max
+    profileApproved: {
+        type: Boolean,
+        default: false
+    },
     createdAt: {
         type: Date,
         default: Date.now,
